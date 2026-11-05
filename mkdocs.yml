@@ -1,0 +1,60 @@
+site_name: Dự án Byzantine FL
+site_description: Cập nhật tiến độ nghiên cứu Federated Learning chống tấn công Byzantine
+site_url: https://tuonghiukin.github.io/Byzantine/
+repo_url: https://github.com/TuongHiuKin/Byzantine
+repo_name: TuongHiuKin/Byzantine
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: vi
+  custom_dir: overrides
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle: {icon: material/weather-night, name: Chế độ tối}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle: {icon: material/weather-sunny, name: Chế độ sáng}
+
+plugins:
+  - search
+  - awesome-pages
+  - git-revision-date-localized:
+      type: date
+      locale: vi
+      fallback_to_build_date: true
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - md_in_html
+  - nl2br
+  - footnotes
+  - toc: {permalink: true}
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist: {custom_checkbox: true}
+  - pymdownx.arithmatex: {generic: true}
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js

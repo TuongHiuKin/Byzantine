@@ -1,0 +1,6 @@
+site/
+__pycache__/
+*.pdf
+*.zip
+*.rar
+.DS_Store

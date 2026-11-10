@@ -1,0 +1,7 @@
+nav:
+  - index.md
+  - "Báo cáo tổng hợp": bao-cao-tong-hop.md
+  - "Đề cương nghiên cứu v3": de-xuat-v3.md
+  - "Đối chiếu bản GAP-1": doi-chieu-gap1.md
+  - "MLflow cho GAP-1": mlflow-cho-gap1.md
+  - ...

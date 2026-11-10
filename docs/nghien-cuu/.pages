@@ -7,5 +7,6 @@ nav:
   - "Bài báo liên quan": bai-bao-lien-quan.md
   - "Phân tích báo cáo AIMS": phan-tich-bao-cao-aims.md
   - "Đo chỉ số theo AIMS": do-luong-chi-so-aims.md
+  - "Khuyến nghị mục tiêu": khuyen-nghi-muc-tieu.md
   - "MLflow cho GAP-1": mlflow-cho-gap1.md
   - ...

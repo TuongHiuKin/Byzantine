@@ -6,6 +6,7 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 
 ## Danh sách tài liệu
 
+- **[Khuyến nghị chọn mục tiêu đánh giá](khuyen-nghi-muc-tieu.md)** — Tổng hợp bốn nguồn bằng chứng: chọn cái giá của phòng thủ làm mục tiêu chính, tấn công cảm biến làm phụ, loại tấn công mô hình thuần.
 - **[Báo cáo tổng hợp — LargeST-ByzBench](bao-cao-tong-hop.md)** — Tổng hợp bốn nhánh công việc: kiểm chứng 93 công trình, đề cương v3, đối chiếu bản GAP-1, và đánh giá MLflow.
 - **[Đề cương nghiên cứu v3 — LargeST-ByzBench](de-xuat-v3.md)** — Bản đề cương sửa theo 18 hạng mục góp ý của giảng viên hướng dẫn. Ma trận 22.240 lần chạy, thiết kế thống kê chốt trước.
 - **[Đối chiếu bản GAP-1 với dữ liệu đã đo](doi-chieu-gap1.md)** — Kiểm bốn con số dữ liệu trong bản đề xuất GAP-1: ba đúng, một không có trong bài gốc. Kèm phân tích thiết kế thống kê.
@@ -26,4 +27,5 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 | Bài báo liên quan | Hoàn chỉnh, khảo sát 114 bài trích dẫn |
 | Phân tích báo cáo AIMS | Hoàn chỉnh, 45 phép kiểm |
 | Đo chỉ số theo AIMS | Hoàn chỉnh, 47 phép kiểm |
+| Khuyến nghị mục tiêu | Hoàn chỉnh, 95 phép kiểm — bản tổng hợp |
 | MLflow cho GAP-1 | Hoàn chỉnh, kèm số đo thực nghiệm |

@@ -11,6 +11,7 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 - **[Đối chiếu bản GAP-1 với dữ liệu đã đo](doi-chieu-gap1.md)** — Kiểm bốn con số dữ liệu trong bản đề xuất GAP-1: ba đúng, một không có trong bài gốc. Kèm phân tích thiết kế thống kê.
 - **[Số test case cho GAP-1 ở 716 node](so-test-case-716-node.md)** — Bao nhiêu lần chạy cho một thành phố ít node nhất: 2.060 bắt buộc, 7.820 đầy đủ, 11.730 nếu mở cả ba mức client.
 - **[Bài báo liên quan — LargeST và GAP-1](bai-bao-lien-quan.md)** — 114 bài trích dẫn LargeST: 1 bài có học liên kết, 0 bài có Byzantine. Khảo sát mới nhất 10/11/2026.
+- **[Phân tích báo cáo Stanford AIMS](phan-tich-bao-cao-aims.md)** — Kiểm chứng báo cáo crawl 270 benchmark AIMS: số liệu đúng, nhưng viết cho dự án khác và áp IRT sai giả định.
 - **[MLflow cho bản GAP-1 — đo ở ba quy mô](mlflow-cho-gap1.md)** — Đánh giá MLflow cho ma trận thí nghiệm 375 / 5.145 / 10.290 lần chạy. Kết luận đảo chiều theo quy mô.
 
 ## Ghi chú về trạng thái
@@ -22,4 +23,5 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 | Đối chiếu GAP-1 | Hoàn chỉnh, đã gửi nhóm |
 | Số test case ở 716 node | Hoàn chỉnh, 54 phép kiểm |
 | Bài báo liên quan | Hoàn chỉnh, khảo sát 114 bài trích dẫn |
+| Phân tích báo cáo AIMS | Hoàn chỉnh, 45 phép kiểm |
 | MLflow cho GAP-1 | Hoàn chỉnh, kèm số đo thực nghiệm |

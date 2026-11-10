@@ -5,5 +5,6 @@ nav:
   - "Đối chiếu bản GAP-1": doi-chieu-gap1.md
   - "Số test case ở 716 node": so-test-case-716-node.md
   - "Bài báo liên quan": bai-bao-lien-quan.md
+  - "Phân tích báo cáo AIMS": phan-tich-bao-cao-aims.md
   - "MLflow cho GAP-1": mlflow-cho-gap1.md
   - ...

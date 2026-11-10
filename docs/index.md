@@ -2,7 +2,7 @@
 
 Trang này tổng hợp tiến độ nghiên cứu **Federated Learning chống tấn công Byzantine trên dữ liệu giao thông** của nhóm.
 
-Tài liệu cho thầy nằm ở tab [Tài liệu chính](tai-lieu-chinh/index.md).
+Tài liệu cho thầy nằm ở tab [Tài liệu chính](tai-lieu-chinh/index.md). Các câu hỏi em cần xin ý kiến thầy nằm ở tab [Câu hỏi cho thầy](cau-hoi/index.md).
 
 ## Mới cập nhật
 

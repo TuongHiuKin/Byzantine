@@ -11,6 +11,14 @@ python them.py duong/dan/file.md tai-lieu-chinh --push
 Các tab: `tai-lieu-chinh`, `cap-nhat`, `nghien-cuu`, `gia-lap`, `nhap-nhom`.
 Hoặc kéo thả file vào thư mục `docs/<tab>/` ngay trên github.com.
 
+## Thêm câu hỏi cho thầy
+
+```bash
+python them_cau_hoi.py "Nội dung câu hỏi" --chu-de "Tên ngắn" --muc 5.2 --push
+```
+
+Hoặc sửa thẳng `docs/cau-hoi/index.md` trên github.com: chép một khối `## Q…` có sẵn, đổi số và nội dung. Khi đã gửi hoặc thầy trả lời, sửa dòng Trạng thái (📝 Chưa gửi → ⏳ Đã gửi → ✅ Đã trả lời) và dòng "Thầy trả lời".
+
 ## Xem thử trên máy
 
 ```bash

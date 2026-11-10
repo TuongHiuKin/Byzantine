@@ -84,16 +84,18 @@ Khuyết thiếu **không đều**: 2017 = 2,70 %, 2018 = 1,37 %, 2019 = 2,16 %,
 
 ### 2.4 Dị biệt tự nhiên — trục trung tâm của khuyến nghị
 
-Earth Mover's Distance giữa phân phối lưu lượng từng hành lang, 716 cảm biến, 2019, giờ 06–22:
+Earth Mover's Distance (Wasserstein-1) giữa phân phối lưu lượng từng hành lang, 716 cảm biến, năm 2019; mỗi nhóm lấy mẫu 20.000 giá trị, seed 0:
 
 | Cách chia | min | median | p90 | max |
 |---|---:|---:|---:|---:|
 | Theo hành lang (26 nhóm) | 4,1 | **86,4** | 193,3 | 307,4 |
-| IID ngẫu nhiên (26 nhóm) | 5,2 | 22,6 | 43,9 | 74,1 |
+| IID ngẫu nhiên (26 nhóm) | 5,2 | **22,6** | 43,9 | 74,1 |
 
 **Tỉ lệ median = 3,81×.** Chia theo hành lang tạo dị biệt gần bốn lần IID, **đo được trước khi chạy thí nghiệm nào**.
 
-Cơ chế cụ thể: I15-N trung bình **414,6** xe/15ph, SR11-E chỉ **23,1** — chênh **18×**. Client I15-N có update magnitude lớn gấp 18 lần, nên median sẽ coi nó là outlier.
+> **Ghi chú về cửa sổ thời gian.** Phép EMD ở trên dùng **cả ngày** (mọi giờ năm 2019), không lọc giờ. Bảng lưu lượng trung bình ở dưới mới dùng khung **06–22**. Tài liệu thiết kế gốc ghi nhãn "06–22" cho cả hai, nên lần đầu kiểm lại tôi tưởng con số không tái tạo được — lọc 06–22 thật ra cho median **107,5 / 29,3**. `56_compute_emd.py` tái tạo đúng **86,4 / 22,6 / 3,81** với tham số gốc (seed 0, mẫu 20.000).
+
+Cơ chế cụ thể, đo trong khung 06–22: I15-N trung bình **414,6** xe/15ph, SR11-E chỉ **23,1** — chênh **18,0×**. Client I15-N có update magnitude lớn gấp 18 lần, nên median sẽ coi nó là outlier.
 
 ---
 
@@ -261,12 +263,18 @@ final_mae, mean_magnitude, rmse, fpr, fnr, asr, utility_retention, wall_clock_s
 
 | Lý do | Bằng chứng |
 |---|---|
-| Có cơ sở lý thuyết đã công bố | Karimireddy và cộng sự (ICLR 2022): aggregator Byzantine gãy dưới non-IID **ngay cả khi không có đối thủ** |
+| Có cơ sở lý thuyết đã công bố | Karimireddy và cộng sự (ICLR 2022), nguyên văn: *"most current defenses assume that the workers have identical data"* và *"For realistic cases when the data across workers are heterogeneous (non-iid), we design new attacks which circumvent current defenses, leading to significant loss of performance"* |
 | Chưa ai đo trên giao thông thật | 0/114 bài trích dẫn LargeST có Byzantine |
-| Đo được **trước** khi chạy thí nghiệm | EMD median 86,4 vs 22,6 = **3,81×**, đo trên 716 cảm biến |
-| Có cơ chế cụ thể | I15-N 414,6 vs SR11-E 23,1 xe/15ph = **18×** → median coi client lớn là outlier |
+| Đo được **trước** khi chạy thí nghiệm | EMD median **86,4 vs 22,6 = 3,81×**, đo trên 716 cảm biến |
+| Có cơ chế cụ thể | I15-N 414,6 vs SR11-E 23,1 xe/15ph = **18,0×** → median coi client lớn là outlier |
 | Không cần giả định gì thêm | Không cần nhãn bất thường, không cần mô phỏng |
 | Cả hai kết cục đều công bố được | Nếu gãy: phát hiện. Nếu đứng vững: phòng thủ tốt hơn ta tưởng |
+
+**Cơ sở lý thuyết — trích nguyên văn.** Karimireddy, He và Jaggi (ICLR 2022) mở đầu bằng đúng vấn đề này:
+
+> *"While this problem has received significant attention recently, most current defenses assume that the workers have identical data. For realistic cases when the data across workers are heterogeneous (non-iid), we design new attacks which circumvent current defenses, leading to significant loss of performance."*
+
+Nghĩa là: các phòng thủ hiện có **giả định dữ liệu đồng nhất**, và dưới dị biệt thì chính chúng bị vượt qua. Bài này không nói phòng thủ "gãy khi không có kẻ tấn công" — nó nói dị biệt **mở đường cho tấn công mới** làm phòng thủ mất tác dụng. Đó chính là cơ chế mà benchmark này muốn đo trên dữ liệu thật.
 
 **Chỉ số phải báo cáo:**
 
@@ -369,7 +377,7 @@ Nói đúng: *"trong 114 bản ghi OpenAlex trích dẫn LargeST, đếm theo ti
 
 ## 9. Tóm tắt một đoạn
 
-Bốn nguồn độc lập — tập trích dẫn LargeST (1/114 có FL, 0/114 có Byzantine), 270 benchmark của AIMS (0 về giao thông), roadmap AIMS (tự loại trừ adversarial robustness), và bằng chứng định lượng trên dữ liệu thật (tấn công ×3 giấu hoàn toàn khỏi kiểm tra chất lượng) — dẫn đến cùng một khuyến nghị: **chọn "cái giá của phòng thủ dưới dị biệt tự nhiên" làm mục tiêu chính, "tấn công mức dữ liệu cảm biến" làm mục tiêu phụ, loại tấn công mức cập nhật mô hình thuần khỏi trọng tâm.** Mục tiêu chính đứng vững vì nó có cơ sở lý thuyết đã công bố, đo được trước khi chạy thí nghiệm (EMD 3,81×), có cơ chế cụ thể (18× chênh lưu lượng), và cả hai kết cục đều công bố được — điều mà một benchmark chỉ-để-thắng không có.
+Bốn nguồn độc lập — tập trích dẫn LargeST (1/114 có FL, 0/114 có Byzantine), 270 benchmark của AIMS (0 về giao thông), roadmap AIMS (tự loại trừ adversarial robustness), và bằng chứng định lượng trên dữ liệu thật (tấn công ×3 giấu hoàn toàn khỏi kiểm tra chất lượng) — dẫn đến cùng một khuyến nghị: **chọn "cái giá của phòng thủ dưới dị biệt tự nhiên" làm mục tiêu chính, "tấn công mức dữ liệu cảm biến" làm mục tiêu phụ, loại tấn công mức cập nhật mô hình thuần khỏi trọng tâm.** Mục tiêu chính đứng vững vì nó có cơ sở lý thuyết đã công bố, đo được trước khi chạy thí nghiệm (EMD **3,81×**), có cơ chế cụ thể (18× chênh lưu lượng), và cả hai kết cục đều công bố được — điều mà một benchmark chỉ-để-thắng không có.
 
 ---
 
@@ -407,6 +415,8 @@ Yin, D., Chen, Y., Kannan, R., & Bartlett, P. (2018). Byzantine-robust distribut
 | Ma trận 270 benchmark AIMS | `aims_benchmarks_catalog.json` |
 | Khối lượng chạy, ràng buộc client | log phân tích cục bộ |
 | Dữ liệu, cổng tái lập, COVID | log phân tích cục bộ |
+| **Dị biệt EMD, cơ chế 17,6×** | log phân tích cục bộ |
+| Sinh số liệu EMD | script phân tích cục bộ |
 | Grid ByzCity | `byzcity_experiment_grid.csv` |
 
 ## Phụ lục B — Bộ kiểm chứng

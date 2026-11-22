@@ -11,6 +11,14 @@ python them.py duong/dan/file.md tai-lieu-chinh --push
 Các tab: `tai-lieu-chinh`, `cap-nhat`, `nghien-cuu`, `gia-lap`, `nhap-nhom`.
 Hoặc kéo thả file vào thư mục `docs/<tab>/` ngay trên github.com.
 
+Mỗi thành viên đăng bài vào mục riêng `docs/thanh-vien/<ten>/`, ví dụ:
+
+```bash
+python them.py bai.md thanh-vien/minh --push
+```
+
+Hướng dẫn đầy đủ: `docs/huong-dan-dang-bai.md` (trang "Hướng dẫn đăng bài" trên web).
+
 ## Thêm câu hỏi cho thầy
 
 ```bash

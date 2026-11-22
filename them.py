@@ -3,7 +3,8 @@
 Cách dùng:
     python them.py <duong_dan_file.md> <tab> [--tieu-de "Tên hiện trên trang chủ"] [--push]
 
-<tab> là một trong: tai-lieu-chinh, cap-nhat, nghien-cuu, gia-lap, nhap-nhom
+<tab> là một trong: tai-lieu-chinh, cap-nhat, nghien-cuu, gia-lap, nhap-nhom,
+      hoặc thanh-vien/<ten-khong-dau> để đăng vào mục của một thành viên
 
 Script sẽ:
   1. Copy file vào docs/<tab>/ với tên không dấu, gạch ngang.
@@ -42,10 +43,14 @@ def tieu_de_tu_file(p: Path) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("file")
-    ap.add_argument("tab", choices=TABS)
+    ap.add_argument("tab", help=f"Một trong {', '.join(TABS)}, hoặc thanh-vien/<ten>")
     ap.add_argument("--tieu-de")
     ap.add_argument("--push", action="store_true")
     a = ap.parse_args()
+
+    hop_le = a.tab in TABS or re.fullmatch(r"thanh-vien/[a-z0-9-]+", a.tab)
+    if not hop_le:
+        sys.exit(f"Tab không hợp lệ: {a.tab}. Dùng {', '.join(TABS)} hoặc thanh-vien/<ten-khong-dau>.")
 
     nguon = Path(a.file)
     if not nguon.is_file():

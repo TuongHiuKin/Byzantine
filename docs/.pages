@@ -1,6 +1,9 @@
 nav:
   - index.md
   - Tài liệu chính: tai-lieu-chinh
-  - Nghiên cứu của Huy: nghien-cuu
+  - Thành viên:
+      - Danh sách thành viên: thanh-vien
+      - Nghiên cứu của Huy: nghien-cuu
   - Câu hỏi cho thầy: cau-hoi
+  - Hướng dẫn đăng bài: huong-dan-dang-bai.md
   - ...

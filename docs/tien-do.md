@@ -21,6 +21,7 @@ Trang này tổng hợp tiến độ nghiên cứu **Federated Learning chống 
 ## Mới cập nhật
 
 <!-- MOI_CAP_NHAT -->
+- **23/11/2026**: [Malkani (2026) — phân tích và đối chiếu](nghien-cuu/phan-tich-malkani.md)
 - **10/11/2026**: [Báo cáo tổng hợp — LargeST-ByzBench](nghien-cuu/bao-cao-tong-hop.md)
 - **10/11/2026**: [Đối chiếu bản GAP-1 với dữ liệu đã đo](nghien-cuu/doi-chieu-gap1.md)
 - **10/11/2026**: [MLflow cho bản GAP-1 — đo ở ba quy mô](nghien-cuu/mlflow-cho-gap1.md)

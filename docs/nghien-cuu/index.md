@@ -14,6 +14,7 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 - **[Bài báo liên quan — LargeST và GAP-1](bai-bao-lien-quan.md)** — 114 bài trích dẫn LargeST: 1 bài có học liên kết, 0 bài có Byzantine. Khảo sát mới nhất 10/11/2026.
 - **[Phân tích báo cáo Stanford AIMS](phan-tich-bao-cao-aims.md)** — Kiểm chứng báo cáo crawl 270 benchmark AIMS: số liệu đúng, nhưng viết cho dự án khác và áp IRT sai giả định.
 - **[Đo chỉ số thí nghiệm theo chuẩn AIMS](do-luong-chi-so-aims.md)** — AIMS loại trừ adversarial robustness khỏi phạm vi. Khung Subject-Item dùng được, torch_measure chưa nên dùng, và grid ByzCity chưa có cột kết quả.
+- **[Phân tích Malkani (2026) — "Who Pays for Byzantine Robustness?"](phan-tich-malkani.md)** — Đọc toàn văn arXiv:2611.22904: ba câu hỏi nghiên cứu, tám bộ gộp trên phân vùng bệnh viện thật, 54.214 lần chạy. Phát hiện trung tâm: 97 % mức sụt mà người ta quy cho tấn công thực ra là mất dữ liệu. Kèm đối chiếu với phân vùng P-A 22 client.
 - **[MLflow cho bản GAP-1 — đo ở ba quy mô](mlflow-cho-gap1.md)** — Đánh giá MLflow cho ma trận thí nghiệm 375 / 5.145 / 10.290 lần chạy. Kết luận đảo chiều theo quy mô.
 
 ## Ghi chú về trạng thái

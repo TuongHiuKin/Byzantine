@@ -24,7 +24,7 @@ Một hai câu giới thiệu phần việc mình làm trong dự án.
 
 **Cách 1, trên github.com (không cần cài gì):** vào `docs/thanh-vien/<ten>/`, bấm **Add file → Upload files**, kéo thả file `.md` vào rồi **Commit changes**. Sau đó thêm một dòng link tới bài vào `index.md` của mình.
 
-**Cách 2, trên máy (có tự thêm vào "Mới cập nhật" ở trang chủ):**
+**Cách 2, trên máy (có tự thêm vào "Mới cập nhật" ở trang [Tiến độ chung](tien-do.md)):**
 
 ```bash
 python them.py duong/dan/bai.md thanh-vien/minh --push

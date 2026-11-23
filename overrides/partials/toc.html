@@ -1,0 +1,36 @@
+{#- Bản sao partials/toc.html của Material, thêm hộp "Đi tới" ở trang chính. -#}
+{% set title = lang.t("toc") %}
+{% if config.mdx_configs.toc and config.mdx_configs.toc.title %}
+  {% set title = config.mdx_configs.toc.title %}
+{% endif %}
+{% if page.is_homepage %}
+  <div class="di-toi">
+    <div class="di-toi__tieu-de">Đi tới</div>
+    <ul>
+      <li><a href="{{ base_url }}/tai-lieu-chinh/">Tài liệu chính</a></li>
+      <li><a href="{{ base_url }}/thanh-vien/">Thành viên</a></li>
+      <li><a href="{{ base_url }}/cau-hoi/">Câu hỏi cho thầy</a></li>
+      <li><a href="{{ base_url }}/tien-do/">Tiến độ chung</a></li>
+      <li><a href="{{ base_url }}/luu-tru/">Lưu trữ (đã gửi thầy)</a></li>
+      <li><a href="{{ base_url }}/huong-dan-dang-bai/">Hướng dẫn đăng bài</a></li>
+    </ul>
+  </div>
+{% endif %}
+<nav class="md-nav md-nav--secondary" aria-label="{{ title | e }}">
+  {% set toc = page.toc %}
+  {% set first = toc | first %}
+  {% if first and first.level == 1 %}
+    {% set toc = first.children %}
+  {% endif %}
+  {% if toc %}
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      {{ title }}
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      {% for toc_item in toc %}
+        {% include "partials/toc-item.html" %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</nav>

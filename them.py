@@ -8,7 +8,7 @@ Cách dùng:
 
 Script sẽ:
   1. Copy file vào docs/<tab>/ với tên không dấu, gạch ngang.
-  2. Ghi một dòng vào mục "Mới cập nhật" ở trang chủ (trừ tab nhap-nhom).
+  2. Ghi một dòng vào mục "Mới cập nhật" ở trang Tiến độ chung (trừ tab nhap-nhom).
   3. Nếu có --push: git add, commit và push. Khoảng 1 phút sau trang cập nhật.
 """
 import argparse
@@ -65,11 +65,11 @@ def main() -> None:
         tieu_de = a.tieu_de or tieu_de_tu_file(dich)
         ngay = datetime.date.today().strftime("%d/%m/%Y")
         dong = f"- **{ngay}**: [{tieu_de}]({a.tab}/{ten_moi})"
-        index = DOCS / "index.md"
+        index = DOCS / "tien-do.md"
         nd = index.read_text(encoding="utf-8")
         if MOC in nd and dong not in nd:
             index.write_text(nd.replace(MOC, f"{MOC}\n{dong}", 1), encoding="utf-8")
-            print("Đã thêm vào mục Mới cập nhật ở trang chủ.")
+            print("Đã thêm vào mục Mới cập nhật ở trang Tiến độ chung.")
 
     if a.push:
         subprocess.run(["git", "add", "-A"], cwd=GOC, check=True)

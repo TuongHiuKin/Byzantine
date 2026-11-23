@@ -1,0 +1,17 @@
+.di-toi {
+  margin: 0.6rem 0.6rem 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-left: 3px solid var(--md-primary-fg-color);
+  border-radius: 0.2rem;
+  font-size: 0.7rem;
+}
+.di-toi__tieu-de {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.di-toi ul { list-style: none; margin: 0; padding: 0; }
+.di-toi li { margin: 0.25rem 0; }
+.di-toi a { color: var(--md-typeset-a-color); }
+/* Màn hình hẹp: thanh bên phải bị ẩn, nên không cần hộp này */
+@media screen and (max-width: 76.1875em) { .di-toi { display: none; } }

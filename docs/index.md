@@ -55,6 +55,8 @@ Các khung đánh giá hiện có chia làm hai phía không nối với nhau:
 
 Theo khảo sát nhanh, **chưa thấy ai chấm một bộ dữ liệu theo câu hỏi "bộ này có làm lộ ra hành vi của bộ gộp chống Byzantine không"**. Nhận định này còn cần một đợt rà soát có hệ thống để kiểm lại.
 
+Danh sách các bài báo và repo đã tìm được, phần nào đã có người làm và phần nào chưa, xem trang **[Khảo sát công trình liên quan](khao-sat-lien-quan.md)** (cập nhật 23/11/2026).
+
 ## 4. Bộ tiêu chí đề xuất
 
 Bốn tầng, mỗi tiêu chí chấm 0–3 điểm (0 = không dùng được cho câu hỏi đó, 3 = rất tốt). Tầng 1–2 lấy lại của người khác, **tầng 3–4 là phần mới**. Các ngưỡng là đề xuất ban đầu, sẽ hiệu chỉnh ở bước E1.

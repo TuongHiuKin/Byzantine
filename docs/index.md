@@ -7,9 +7,6 @@ hide:
 
 *Benchmark đánh giá dữ liệu cho Federated Learning chống tấn công Byzantine trên dữ liệu giao thông · cập nhật 24/11/2026*
 
-!!! info "Tình trạng"
-    **Đang làm, chưa gửi thầy.** Trang này thay cho trang chính bản 23/11 (bản cũ giữ ở [Lưu trữ](benchmark-ban-23-11.md)). Các ngưỡng trong trang là ngưỡng ban đầu, sẽ được hiệu chỉnh bằng giả lập ở mục 5. Tiến độ các phần khác ở trang [Tiến độ chung](tien-do.md).
-
 **Đọc nhanh:**
 
 - **Khoảng trống:** chưa có thước đo nào, tính **trước khi huấn luyện**, cho biết một bộ dữ liệu có làm lộ hành vi của bộ gộp chống Byzantine hay không, và đã được kiểm chứng là dự báo đúng hành vi đó (mục 1).

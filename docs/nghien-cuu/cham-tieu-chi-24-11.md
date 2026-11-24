@@ -1,4 +1,4 @@
-# Chấm chính bộ tiêu chí 24/11 lên LargeST — kết quả và ba lỗi thiết kế
+# Chấm chính bộ tiêu chí 24/11 lên LargeST — kết quả và bốn lỗi thiết kế
 
 *Phân tích phản biện bộ tiêu chí đánh giá dữ liệu (bản 24/11/2026) · 24/11/2026*
 
@@ -9,13 +9,13 @@
 
 ## 0. Kết luận trước
 
-**Chấm xong: 1 đạt, 2 đạt có điều kiện, 3 trượt ngưỡng, 1 không thể đạt vì lỗi thiết kế.**
+**Chấm xong: 2 đạt, 3 trượt ngưỡng, 2 không dùng được vì lỗi thiết kế.**
 
 | Mã | Đo được | Ngưỡng 3 điểm (theo trang) | Kết quả |
 |---|---|---|---|
 | **T2** Độ đầy đủ | NaN **2,161 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
 | **T3** Tính hợp lệ | lỗi **2,79 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
-| **F2** Dị biệt | **3,386×** | ≥ 3 | **ĐẠT** (3 điểm) |
+| **F2** Dị biệt | **3,386×** (seed 0; 200 seed: 2,33–4,92) | ≥ 3 | **ĐẠT, nhưng 15,5 % seed trượt** |
 | **F3** Tỉ trọng | Gini **0,401**, lớn nhất **13,27 %** | Gini 0,2–0,5, không client > 50 % | **ĐẠT** (3 điểm) |
 | **B3** Lỗi giống tấn công | **59,09 %** client | 10–40 % | **TRƯỢT** (quá bẩn) |
 | **K2** Độ tầm thường | R² **0,8667** | ≤ 0,70 | **TRƯỢT** (0 điểm) |
@@ -25,7 +25,8 @@ Ba kết luận:
 
 1. **Rubric tự loại bộ dữ liệu mà nó chọn.** K2 = 0,8667 trong khi ngưỡng là ≤ 0,70. Đây không phải lỗi nhỏ — cùng một ngưỡng, chấm lên chính LargeST SD, cho **0 điểm ở hạng mục "độ tầm thường"**.
 2. **K3 không thể đạt trên bất kỳ dữ liệu giao thông thật nào** — kể cả năm COVID. Đây là **lỗi cấu trúc của công thức**, sẽ giải thích ở §3.
-3. **B1 vẫn chưa đo được** vì cần huấn luyện — đúng như trang đã ghi, nhưng nó là tiêu chí được kỳ vọng dự báo FPR mạnh nhất (§4.2 của trang), nên thiếu nó là thiếu trụ chính.
+3. **F2 đạt nhưng không ổn định.** Tử số cố định, mẫu số là **một lần rút ngẫu nhiên không được khai báo seed**. Qua 200 seed, F2 chạy từ **2,33 đến 4,92**, và **15,5 % số seed cho 0 điểm** dù cùng dữ liệu, cùng công thức, cùng ngưỡng. Con số 3,81 trong đề cương không sai — nó chỉ là một seed khác (§6).
+4. **B1 vẫn chưa đo được** vì cần huấn luyện — đúng như trang đã ghi, nhưng nó là tiêu chí được kỳ vọng dự báo FPR mạnh nhất (§4.2 của trang), nên thiếu nó là thiếu trụ chính.
 
 ---
 
@@ -170,9 +171,44 @@ Như vậy điểm vẫn phân biệt được, và gate vẫn chặn được d
 | Ngẫu nhiên cùng cỡ (22 client) | **24,196** |
 | **Tỉ số** | **3,386** |
 
-231 cặp client. Đây là con số **khớp với 3,81** đo trước đó trên parquet — chênh lệch do bản này đọc HDF5 gốc (còn NaN) thay vì parquet đã `fillna(0)`. Đo trên HDF5 thì **thấp hơn một chút**, đúng chiều: `fillna(0)` tạo thêm khối 0 giống nhau giữa các client, làm dị biệt trông cao hơn thực tế.
+231 cặp client.
 
-**Đây là một phát hiện nhỏ nhưng đáng ghi:** chính bước tiền xử lý `fillna(0)` **thổi phồng** F2 từ 3,39 lên 3,81. Không đủ để đổi kết luận (cả hai đều ≥ 3), nhưng nó cho thấy các chỉ số dị biệt **nhạy với cách xử lý NaN** — và đó là lý do phải ghi rõ đọc từ tệp nào.
+**Đính chính một khẳng định tôi đã đăng ở bản trước của trang này.** Tôi từng viết *"`fillna(0)` thổi phồng F2 từ 3,39 lên 3,81"*. Đó là suy luận từ cơ chế, **không phải số đo** — và khi đo thì nó **sai cả hai chiều**. Đo bằng cùng một công cụ trên bốn đầu vào (`64_f2_fillna_test.py`):
+
+| Đầu vào | EMD thật | EMD ngẫu nhiên | **F2** | NaN % | 0 % |
+|---|---|---|---|---|---|
+| HDF5 5 phút, giữ NaN | 81,924 | 24,196 | **3,386** | 2,161 | 0,165 |
+| HDF5 15 phút, **không** điền | 81,928 | 24,208 | **3,384** | 2,146 | 0,101 |
+| HDF5 15 phút, **`fillna(0)`** | 81,695 | 25,745 | **3,173** | 0 | 2,247 |
+| parquet như đang có | 81,695 | 28,633 | **2,853** | 0 | 2,247 |
+
+Hai điều rút ra, cả hai **ngược** với điều tôi đã viết:
+
+1. **`fillna(0)` làm F2 GIẢM, không tăng** — 3,384 → 3,173 (−0,211). Cơ chế: điền 0 làm *cả hai* vế đều đổi, nhưng vế ngẫu nhiên đổi nhiều hơn (24,2 → 25,7), vì nhóm ngẫu nhiên trộn cảm biến khác tuyến nên chịu nhiều ô 0 nhân tạo hơn. Tăng mẫu số thì tỉ số giảm.
+2. **Độ phân giải 5 phút vs 15 phút gần như không ảnh hưởng** (3,386 vs 3,384, lệch 0,002). Yếu tố quyết định là **có hay không điền 0**, và **bản parquet đang dùng**.
+
+### F2 không ổn định — và đây là lỗi thiết kế thứ tư
+
+F2 có dạng `EMD(chia thật) / EMD(chia ngẫu nhiên)`. Tử số **cố định** với một bộ dữ liệu và một cách chia. Nhưng **mẫu số phụ thuộc vào một lần rút ngẫu nhiên** — và bất kỳ ai chấm F2 đều phải chọn seed cho lần rút đó, mà trang **không nói seed nào**.
+
+Đo 200 seed (`66_f2_seed_test.py`):
+
+| | Giá trị |
+|---|---|
+| Tử số (cố định) | 81,924 |
+| Mẫu số | 16,7 – 35,2 |
+| **F2** | **2,329 – 4,919** |
+| Trung vị | **3,458** |
+| Độ lệch chuẩn | **0,464** |
+
+Hai hệ quả:
+
+1. **Con số 3,386 tôi báo cáo là seed 0 — không phải "F2 của LargeST".** F2 của bộ dữ liệu này là một *phân bố* với trung vị 3,458 và độ lệch chuẩn 0,464. Báo một điểm mà không báo seed là báo một mẫu của phân bố như thể nó là hằng số.
+2. **Điểm số lật theo seed.** Ngưỡng 3 điểm là F2 ≥ 3. Qua 200 seed, **169 lần đạt (84,5 %) và 31 lần trượt (15,5 %)**. Cùng một bộ dữ liệu, cùng một công thức, cùng một ngưỡng — **15,5 % khả năng nhận 0 điểm** thay vì 3. Một tiêu chí mà điểm của nó phụ thuộc một biến không được khai báo thì chưa phải tiêu chí, mà là một phép thử may rủi.
+
+**Đây cũng là lời giải cho 3,81.** Giá trị 3,81 trong đề cương nằm **trong** khoảng 200 seed (44/200 seed đạt ≥ 3,81; max 4,919) — nên nó không sai, nó là **một seed khác**. Cụ thể: 3,81 ứng với mẫu số ≈ **21,50** thay vì 24,20 của seed 0. Tôi đã thử tìm xem có cửa sổ giờ nào tái lập được 3,81 không (`65_f2_window_test.py`) — và **không cửa sổ nào**: lọc 06–22 làm F2 **giảm** xuống 3,104, không tăng. Vậy khác biệt là seed của phép chia ngẫu nhiên, không phải cửa sổ thời gian.
+
+**Sửa thế nào:** hoặc (a) khai báo seed và báo kèm khoảng tin cậy trên nhiều seed, hoặc (b) bỏ mẫu số ngẫu nhiên và dùng một mốc tất định — ví dụ EMD giữa các cảm biến **trong cùng một tuyến** (dị biệt nội tại), cho ra tỉ số không phụ thuộc lần rút nào.
 
 ### F3: Gini 0,401, client lớn nhất 13,27 %
 
@@ -193,7 +229,7 @@ Như vậy điểm vẫn phân biệt được, và gate vẫn chặn được d
 |---|---|---|---|---|
 | T2 | 2,161 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
 | T3 | 2,79 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
-| F2 | 3,386× | ≥ 3 | **3** | — |
+| F2 | 3,386× (seed 0) | ≥ 3 | **3** | không khai báo seed → 15,5 % seed cho 0 |
 | F3 | 0,401 / 13,27 % | 0,2–0,5, ≤ 50 % | **3** | — |
 | B1 | *chưa đo* | ≥ 2 | **?** | cần huấn luyện |
 | B3 | 59,09 % | 10–40 % | **0** | dữ liệu thật quá bẩn |
@@ -213,12 +249,13 @@ Như vậy điểm vẫn phân biệt được, và gate vẫn chặn được d
 |---|---|---|
 | 1 | **Sửa K2** sang tỉ số MAE (luật đơn giản ÷ SOTA), ngưỡng ≥ 1,5 | Công thức hiện tại loại mọi dữ liệu tuần hoàn, tức mọi dữ liệu giao thông |
 | 2 | **Sửa K3** sang so cùng kỳ giữa hai năm, hoặc bỏ dạng tỉ số | Công thức hiện tại không thể đạt, kể cả năm COVID |
+| 2b | **Khai báo seed cho F2, hoặc bỏ mẫu số ngẫu nhiên** | 15,5 % seed cho 0 điểm; F2 hiện là biến ngẫu nhiên không khai báo |
 | 3 | **Tách ngưỡng gate và ngưỡng score** cho T2/T3 | PeMS thật không đạt 1 %; giữ 1 % làm score, nới gate lên 5 % |
 | 4 | **Quyết định B3**: chấp nhận 59 % làm điều kiện mạnh, hay lọc trước | Đây là quyết định về **thiết kế thí nghiệm**, phải chốt trước khi chạy |
 | 5 | **Đo B1** — cần mô hình ridge AR-12 huấn luyện tập trung | B1 là tiêu chí dự báo FPR mạnh nhất theo §4.2 của trang |
 | 6 | **Ghi rõ đọc HDF5 hay parquet** trong mọi báo cáo F2 | `fillna(0)` thổi phồng F2 3,39 → 3,81 |
 
-Ba việc đầu sửa được trong một buổi và **phải sửa trước khi chấm thêm bộ dữ liệu nào**, vì nếu không, mọi bảng so sánh sau đó đều dựa trên hai công thức hỏng.
+Các việc trên sửa được trong một buổi và **phải sửa trước khi chấm thêm bộ dữ liệu nào**, vì nếu không, mọi bảng so sánh sau đó đều dựa trên công thức hỏng.
 
 ---
 

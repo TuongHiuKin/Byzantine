@@ -11,4 +11,5 @@ nav:
   - "MLflow cho GAP-1": mlflow-cho-gap1.md
   - "Phân tích Malkani (2026)": phan-tich-malkani.md
   - "Chấm bộ tiêu chí 24/11 lên LargeST": cham-tieu-chi-24-11.md
+  - "Hạ tầng triển khai — đo trên máy thật": ha-tang-trien-khai.md
   - ...

@@ -23,6 +23,7 @@ Trang này tổng hợp tiến độ nghiên cứu **Federated Learning chống 
 ## Mới cập nhật
 
 <!-- MOI_CAP_NHAT -->
+- **25/11/2026**: [Hạ tầng triển khai — đo trên máy thật](nghien-cuu/ha-tang-trien-khai.md)
 - **24/11/2026**: [Chấm bộ tiêu chí 24/11 lên LargeST — kết quả và ba lỗi thiết kế](nghien-cuu/cham-tieu-chi-24-11.md)
 - **24/11/2026**: [Tiêu chí đánh giá dữ liệu và kế hoạch giả lập đầu tiên](index.md) (thay trang chính; bản 23/11 chuyển vào [Lưu trữ](benchmark-ban-23-11.md))
 - **23/11/2026**: [Malkani (2026) — phân tích và đối chiếu](nghien-cuu/phan-tich-malkani.md)

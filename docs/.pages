@@ -1,5 +1,5 @@
 nav:
-  - Benchmark dữ liệu: index.md
+  - Tiêu chí & giả lập: index.md
   - Khảo sát liên quan: khao-sat-lien-quan.md
   - Tài liệu chính: tai-lieu-chinh
   - Thành viên:
@@ -7,8 +7,9 @@ nav:
       - Nghiên cứu của Huy: nghien-cuu
   - Câu hỏi cho thầy: cau-hoi
   - Tiến độ chung: tien-do.md
-  - Lưu trữ (đã gửi thầy):
+  - Lưu trữ:
       - luu-tru.md
+      - "Benchmark dữ liệu (bản 23/11) · chưa gửi thầy": benchmark-ban-23-11.md
       - "Đề xuất GAP-1 (05/11) · thầy đã góp ý": tai-lieu-chinh/de-xuat-gap1.md
   - Hướng dẫn đăng bài: huong-dan-dang-bai.md
   - ...

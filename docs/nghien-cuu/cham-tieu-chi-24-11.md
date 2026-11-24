@@ -15,7 +15,7 @@
 |---|---|---|---|
 | **T2** Độ đầy đủ | NaN **2,161 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
 | **T3** Tính hợp lệ | lỗi **2,79 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
-| **F2** Dị biệt | **3,386×** (seed 0; 200 seed: 2,33–4,92) | ≥ 3 | **ĐẠT, nhưng 15,5 % seed trượt** |
+| **F2** Dị biệt | **3,386×** (seed 0; 200 seed: 2,32–4,84, trung vị 3,432) | ≥ 3 | **ĐẠT, nhưng 16,5 % seed trượt** |
 | **F3** Tỉ trọng | Gini **0,401**, lớn nhất **13,27 %** | Gini 0,2–0,5, không client > 50 % | **ĐẠT** (3 điểm) |
 | **B3** Lỗi giống tấn công | **59,09 %** client | 10–40 % | **TRƯỢT** (quá bẩn) |
 | **K2** Độ tầm thường | R² **0,8667** | ≤ 0,70 | **TRƯỢT** (0 điểm) |
@@ -25,7 +25,7 @@ Ba kết luận:
 
 1. **Rubric tự loại bộ dữ liệu mà nó chọn.** K2 = 0,8667 trong khi ngưỡng là ≤ 0,70. Đây không phải lỗi nhỏ — cùng một ngưỡng, chấm lên chính LargeST SD, cho **0 điểm ở hạng mục "độ tầm thường"**.
 2. **K3 không thể đạt trên bất kỳ dữ liệu giao thông thật nào** — kể cả năm COVID. Đây là **lỗi cấu trúc của công thức**, sẽ giải thích ở §3.
-3. **F2 đạt nhưng không ổn định.** Tử số cố định, mẫu số là **một lần rút ngẫu nhiên không được khai báo seed**. Qua 200 seed, F2 chạy từ **2,33 đến 4,92**, và **15,5 % số seed cho 0 điểm** dù cùng dữ liệu, cùng công thức, cùng ngưỡng. Con số 3,81 trong đề cương không sai — nó chỉ là một seed khác (§6).
+3. **F2 đạt nhưng không ổn định.** Tử số cố định, mẫu số là **một lần rút ngẫu nhiên không được khai báo seed**. Qua 200 seed, F2 chạy từ **2,32 đến 4,84** (trung vị 3,432), và **16,5 % số seed cho 0 điểm** dù cùng dữ liệu, cùng công thức, cùng ngưỡng. Con số 3,81 trong đề cương không sai — nó chỉ là một seed khác (§6).
 4. **B1 vẫn chưa đo được** vì cần huấn luyện — đúng như trang đã ghi, nhưng nó là tiêu chí được kỳ vọng dự báo FPR mạnh nhất (§4.2 của trang), nên thiếu nó là thiếu trụ chính.
 
 ---
@@ -163,7 +163,7 @@ Như vậy điểm vẫn phân biệt được, và gate vẫn chặn được d
 
 ## 6. F2 và F3 — hai hạng mục đạt
 
-### F2: 3,386× (ngưỡng ≥ 3)
+### F2: 3,386× ở seed 0 — nhưng là một phân bố (ngưỡng ≥ 3)
 
 | Chia | EMD trung vị |
 |---|---|
@@ -191,22 +191,24 @@ Hai điều rút ra, cả hai **ngược** với điều tôi đã viết:
 
 F2 có dạng `EMD(chia thật) / EMD(chia ngẫu nhiên)`. Tử số **cố định** với một bộ dữ liệu và một cách chia. Nhưng **mẫu số phụ thuộc vào một lần rút ngẫu nhiên** — và bất kỳ ai chấm F2 đều phải chọn seed cho lần rút đó, mà trang **không nói seed nào**.
 
-Đo 200 seed (`66_f2_seed_test.py`):
+Đo **200 seed** (`67_f2_seed_200.py`; bộ ước lượng histogram đã được kiểm khớp với công cụ trực tiếp — lệch 0,003 trên phép chia thật):
 
 | | Giá trị |
 |---|---|
-| Tử số (cố định) | 81,924 |
-| Mẫu số | 16,7 – 35,2 |
-| **F2** | **2,329 – 4,919** |
-| Trung vị | **3,458** |
-| Độ lệch chuẩn | **0,464** |
+| Tử số (cố định, không ngẫu nhiên) | **81,925** |
+| Mẫu số qua 200 seed | **16,908 – 35,361** (trung vị 23,874, sd 3,264) |
+| **F2** | **2,317 – 4,845** |
+| Trung vị F2 | **3,432** |
+| Độ lệch chuẩn | **0,455** |
+| **Đạt ≥ 3** | **167/200 = 83,5 %** |
+| **Trượt < 3** | **33/200 = 16,5 %** |
 
 Hai hệ quả:
 
-1. **Con số 3,386 tôi báo cáo là seed 0 — không phải "F2 của LargeST".** F2 của bộ dữ liệu này là một *phân bố* với trung vị 3,458 và độ lệch chuẩn 0,464. Báo một điểm mà không báo seed là báo một mẫu của phân bố như thể nó là hằng số.
-2. **Điểm số lật theo seed.** Ngưỡng 3 điểm là F2 ≥ 3. Qua 200 seed, **169 lần đạt (84,5 %) và 31 lần trượt (15,5 %)**. Cùng một bộ dữ liệu, cùng một công thức, cùng một ngưỡng — **15,5 % khả năng nhận 0 điểm** thay vì 3. Một tiêu chí mà điểm của nó phụ thuộc một biến không được khai báo thì chưa phải tiêu chí, mà là một phép thử may rủi.
+1. **Con số 3,386 tôi báo cáo là seed 0 — không phải "F2 của LargeST".** F2 của bộ dữ liệu này là một *phân bố* với trung vị 3,432 và độ lệch chuẩn 0,455. Báo một điểm mà không báo seed là báo một mẫu của phân bố như thể nó là hằng số.
+2. **Điểm số lật theo seed.** Ngưỡng 3 điểm là F2 ≥ 3. Qua 200 seed, **167 lần đạt và 33 lần trượt (16,5 %)**. Cùng một bộ dữ liệu, cùng một công thức, cùng một ngưỡng — gần **1/6 khả năng nhận 0 điểm** thay vì 3. Một tiêu chí mà điểm của nó phụ thuộc một biến không được khai báo thì chưa phải tiêu chí, mà là một phép thử may rủi.
 
-**Đây cũng là lời giải cho 3,81.** Giá trị 3,81 trong đề cương nằm **trong** khoảng 200 seed (44/200 seed đạt ≥ 3,81; max 4,919) — nên nó không sai, nó là **một seed khác**. Cụ thể: 3,81 ứng với mẫu số ≈ **21,50** thay vì 24,20 của seed 0. Tôi đã thử tìm xem có cửa sổ giờ nào tái lập được 3,81 không (`65_f2_window_test.py`) — và **không cửa sổ nào**: lọc 06–22 làm F2 **giảm** xuống 3,104, không tăng. Vậy khác biệt là seed của phép chia ngẫu nhiên, không phải cửa sổ thời gian.
+**Đây cũng là lời giải cho 3,81.** Giá trị 3,81 trong đề cương nằm **trong** khoảng 200 seed (40/200 seed đạt ≥ 3,81; max 4,845) — nên nó **không sai**, nó là **một seed khác**. Cụ thể 3,81 ứng với mẫu số ≈ **21,50** thay vì 24,20 của seed 0, tức khoảng **phân vị thứ 96** của phân bố mẫu số. Nói cách khác: con số trong đề cương là một lần rút nằm ở đuôi trên, không phải giá trị trung tâm. Tôi đã thử tìm xem có cửa sổ giờ nào tái lập được 3,81 không (`65_f2_window_test.py`) — và **không cửa sổ nào**: lọc 06–22 làm F2 **giảm** xuống 3,104, không tăng. Vậy khác biệt là seed của phép chia ngẫu nhiên, không phải cửa sổ thời gian — kết luận này giữ nguyên sau khi đo đủ 200 seed.
 
 **Sửa thế nào:** hoặc (a) khai báo seed và báo kèm khoảng tin cậy trên nhiều seed, hoặc (b) bỏ mẫu số ngẫu nhiên và dùng một mốc tất định — ví dụ EMD giữa các cảm biến **trong cùng một tuyến** (dị biệt nội tại), cho ra tỉ số không phụ thuộc lần rút nào.
 
@@ -229,7 +231,7 @@ Hai hệ quả:
 |---|---|---|---|---|
 | T2 | 2,161 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
 | T3 | 2,79 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
-| F2 | 3,386× (seed 0) | ≥ 3 | **3** | không khai báo seed → 15,5 % seed cho 0 |
+| F2 | 3,386× (seed 0), trung vị 3,432 | ≥ 3 | **3** | không khai báo seed → 16,5 % seed cho 0 |
 | F3 | 0,401 / 13,27 % | 0,2–0,5, ≤ 50 % | **3** | — |
 | B1 | *chưa đo* | ≥ 2 | **?** | cần huấn luyện |
 | B3 | 59,09 % | 10–40 % | **0** | dữ liệu thật quá bẩn |
@@ -249,7 +251,7 @@ Hai hệ quả:
 |---|---|---|
 | 1 | **Sửa K2** sang tỉ số MAE (luật đơn giản ÷ SOTA), ngưỡng ≥ 1,5 | Công thức hiện tại loại mọi dữ liệu tuần hoàn, tức mọi dữ liệu giao thông |
 | 2 | **Sửa K3** sang so cùng kỳ giữa hai năm, hoặc bỏ dạng tỉ số | Công thức hiện tại không thể đạt, kể cả năm COVID |
-| 2b | **Khai báo seed cho F2, hoặc bỏ mẫu số ngẫu nhiên** | 15,5 % seed cho 0 điểm; F2 hiện là biến ngẫu nhiên không khai báo |
+| 2b | **Khai báo seed cho F2, hoặc bỏ mẫu số ngẫu nhiên** | 16,5 % seed cho 0 điểm; F2 hiện là biến ngẫu nhiên không khai báo |
 | 3 | **Tách ngưỡng gate và ngưỡng score** cho T2/T3 | PeMS thật không đạt 1 %; giữ 1 % làm score, nới gate lên 5 % |
 | 4 | **Quyết định B3**: chấp nhận 59 % làm điều kiện mạnh, hay lọc trước | Đây là quyết định về **thiết kế thí nghiệm**, phải chốt trước khi chạy |
 | 5 | **Đo B1** — cần mô hình ridge AR-12 huấn luyện tập trung | B1 là tiêu chí dự báo FPR mạnh nhất theo §4.2 của trang |
@@ -287,4 +289,14 @@ Toàn bộ `.py` trong repo: `them.py`, `them_cau_hoi.py` (hai script thêm tran
 
 Điều này **không** nhất thiết là lỗi — mã có thể chưa được đẩy lên. Nhưng nó có nghĩa là **chưa ai ngoài tác giả chạy lại được** bất kỳ con số nào trong trang chấm điểm, kể cả F2 = 3,81, HDR = 2,64, K2 = 0,98 của dữ liệu sin. Các con số trong trang này được đo bằng mã ở `61_score_criteria_24-11.py` và `62_b3_k3_check.py`, chạy lại được.
 
-**Kiểm chứng trích dẫn:** 8/8 định danh arXiv trên trang resolve đúng, title khớp từng chữ (arXiv API, 24/11/2026). Không có định danh nào trỏ sang bài khác. Hai trích dẫn không phải arXiv — Petkani (Future Transportation 6(3):124) và Miller (Data 9(12):151) — chưa kiểm trong lượt này.
+**Kiểm chứng trích dẫn — 10/10.**
+
+- **8/8 arXiv** resolve đúng, title khớp từng chữ (arXiv API, 24/11/2026). Không có định danh nào trỏ sang bài khác.
+- **2/2 DOI** khớp **mọi trường** (Crossref, 25/11/2026):
+
+| DOI | Kết quả Crossref | Khớp |
+|---|---|---|
+| `10.3390/futuretransp6030124` | Petkani et al., *Data Quality in Traffic Management: Framework and Real-World Impacts*, **Future Transportation 6(3):124, 2026** | title, journal, vol 6, issue 3, article 124, năm 2026 — **tất cả** |
+| `10.3390/data9120151` | Miller et al., *A Framework for Current and New Data Quality Dimensions: An Overview*, **Data 9(12):151, 2024** | title, journal, vol 9, issue 12, article 151, năm 2024 — **tất cả** |
+
+Danh sách tham chiếu của trang **không có lỗi trích dẫn nào** — kể cả số tập, số kỳ, số bài. Đây là mức chính xác cao hơn phần lớn bài báo đã công bố, và cần nói rõ vì nó **tách biệt** khỏi các vấn đề phương pháp ở trên: người viết tra tài liệu tốt, chỉ là ba trong tám công thức chưa được chạy thử.

@@ -9,13 +9,13 @@
 
 ## 0. Kết luận trước
 
-**Chấm xong: 2 đạt, 3 trượt ngưỡng, 2 không dùng được vì lỗi thiết kế.**
+**Chấm xong: 1 đạt, 4 trượt ngưỡng, 2 không dùng được vì lỗi thiết kế.**
 
 | Mã | Đo được | Ngưỡng 3 điểm (theo trang) | Kết quả |
 |---|---|---|---|
 | **T2** Độ đầy đủ | NaN **2,161 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
 | **T3** Tính hợp lệ | lỗi **2,79 %** | ≤ 1 % | **TRƯỢT** (0 điểm) |
-| **F2** Dị biệt | **3,386×** (seed 0; 200 seed: 2,32–4,84, trung vị 3,432) | ≥ 3 | **ĐẠT, nhưng 16,5 % seed trượt** |
+| **F2** Dị biệt | **2,85×** khi RNG sạch · 3,81 chỉ khi dùng chung RNG | ≥ 3 | **TRƯỢT** ở cách viết đúng |
 | **F3** Tỉ trọng | Gini **0,401**, lớn nhất **13,27 %** | Gini 0,2–0,5, không client > 50 % | **ĐẠT** (3 điểm) |
 | **B3** Lỗi giống tấn công | **59,09 %** client | 10–40 % | **TRƯỢT** (quá bẩn) |
 | **K2** Độ tầm thường | R² **0,8667** | ≤ 0,70 | **TRƯỢT** (0 điểm) |
@@ -25,8 +25,10 @@ Ba kết luận:
 
 1. **Rubric tự loại bộ dữ liệu mà nó chọn.** K2 = 0,8667 trong khi ngưỡng là ≤ 0,70. Đây không phải lỗi nhỏ — cùng một ngưỡng, chấm lên chính LargeST SD, cho **0 điểm ở hạng mục "độ tầm thường"**.
 2. **K3 không thể đạt trên bất kỳ dữ liệu giao thông thật nào** — kể cả năm COVID. Đây là **lỗi cấu trúc của công thức**, sẽ giải thích ở §3.
-3. **F2 đạt nhưng không ổn định.** Tử số cố định, mẫu số là **một lần rút ngẫu nhiên không được khai báo seed**. Qua 200 seed, F2 chạy từ **2,32 đến 4,84** (trung vị 3,432), và **16,5 % số seed cho 0 điểm** dù cùng dữ liệu, cùng công thức, cùng ngưỡng. Con số 3,81 trong đề cương không sai — nó chỉ là một seed khác (§6).
-4. **B1 vẫn chưa đo được** vì cần huấn luyện — đúng như trang đã ghi, nhưng nó là tiêu chí được kỳ vọng dự báo FPR mạnh nhất (§4.2 của trang), nên thiếu nó là thiếu trụ chính.
+3. **F2 là biến ngẫu nhiên, và con số công bố phụ thuộc thứ tự gọi hàm.** Tử số cố định; mẫu số là một lần rút ngẫu nhiên. Qua 200 seed F2 chạy **2,317–4,845** và **16,5 % seed cho 0 điểm**. Nặng hơn: mẫu số còn phụ thuộc **trạng thái RNG tích luỹ** — dùng chung một generator cho cả bước lấy mẫu lẫn bước shuffle cho ra **3,81**; reset generator (cách viết đúng) cho ra **2,85**, tức **trượt ngưỡng 3** (§6).
+3. **B1 vẫn chưa đo được** vì cần huấn luyện — đúng như trang đã ghi, nhưng nó là tiêu chí được kỳ vọng dự báo FPR mạnh nhất (§4.2 của trang), nên thiếu nó là thiếu trụ chính.
+
+Điểm tổng: **3/21 (14 %)**, chưa tính B1.
 
 ---
 
@@ -161,17 +163,20 @@ Như vậy điểm vẫn phân biệt được, và gate vẫn chặn được d
 
 ---
 
-## 6. F2 và F3 — hai hạng mục đạt
+## 6. F2 trượt ngưỡng, F3 đạt
 
-### F2: 3,386× ở seed 0 — nhưng là một phân bố (ngưỡng ≥ 3)
+### F2: 2,85 ở cách viết đúng, 3,81 nhờ trạng thái RNG — ngưỡng ≥ 3
 
-| Chia | EMD trung vị |
-|---|---|
-| Theo hành lang (P-A, 22 client) | **81,924** |
-| Ngẫu nhiên cùng cỡ (22 client) | **24,196** |
-| **Tỉ số** | **3,386** |
+Đo trên **26 tuyến gốc** của LargeST (đúng như `56_compute_emd.py`), bằng `scipy.stats.wasserstein_distance`, mẫu 20.000/nhóm, seed 0:
 
-231 cặp client.
+| Cách quản lý RNG | EMD thật | EMD đối chứng | **F2** |
+|---|---|---|---|
+| **Chung một generator** (như script hiện tại) | 86,37 | 22,64 | **3,81** — đạt |
+| **Generator mới cho đối chứng** (cách viết đúng) | 86,37 | **30,27** | **2,85** — **trượt** |
+
+Tử số khớp hoàn hảo với con số công bố (86,37 vs 86,4). Toàn bộ khác biệt nằm ở **mẫu số**, và mẫu số phụ thuộc **thứ tự gọi hàm**, không phụ thuộc dữ liệu. Chi tiết ở mục dưới.
+
+Trên **phân vùng P-A 22 client** (định nghĩa khác, dùng trong đề cương §3.2): EMD thật 81,92 / đối chứng 24,20 → **3,386**. Cả ba con số 2,85 · 3,39 · 3,81 đều là tỉ số của **cùng một công thức** trên **cùng một dữ liệu**; chúng khác nhau vì cách chia nhóm và cách quản lý RNG.
 
 **Đính chính một khẳng định tôi đã đăng ở bản trước của trang này.** Tôi từng viết *"`fillna(0)` thổi phồng F2 từ 3,39 lên 3,81"*. Đó là suy luận từ cơ chế, **không phải số đo** — và khi đo thì nó **sai cả hai chiều**. Đo bằng cùng một công cụ trên bốn đầu vào (`64_f2_fillna_test.py`):
 
@@ -187,7 +192,7 @@ Hai điều rút ra, cả hai **ngược** với điều tôi đã viết:
 1. **`fillna(0)` làm F2 GIẢM, không tăng** — 3,384 → 3,173 (−0,211). Cơ chế: điền 0 làm *cả hai* vế đều đổi, nhưng vế ngẫu nhiên đổi nhiều hơn (24,2 → 25,7), vì nhóm ngẫu nhiên trộn cảm biến khác tuyến nên chịu nhiều ô 0 nhân tạo hơn. Tăng mẫu số thì tỉ số giảm.
 2. **Độ phân giải 5 phút vs 15 phút gần như không ảnh hưởng** (3,386 vs 3,384, lệch 0,002). Yếu tố quyết định là **có hay không điền 0**, và **bản parquet đang dùng**.
 
-### F2 không ổn định — và đây là lỗi thiết kế thứ tư
+### F2 không ổn định theo seed — lỗi thiết kế thứ tư
 
 F2 có dạng `EMD(chia thật) / EMD(chia ngẫu nhiên)`. Tử số **cố định** với một bộ dữ liệu và một cách chia. Nhưng **mẫu số phụ thuộc vào một lần rút ngẫu nhiên** — và bất kỳ ai chấm F2 đều phải chọn seed cho lần rút đó, mà trang **không nói seed nào**.
 
@@ -205,19 +210,48 @@ F2 có dạng `EMD(chia thật) / EMD(chia ngẫu nhiên)`. Tử số **cố đ�
 
 Hai hệ quả:
 
-1. **Con số 3,386 tôi báo cáo là seed 0 — không phải "F2 của LargeST".** F2 của bộ dữ liệu này là một *phân bố* với trung vị 3,432 và độ lệch chuẩn 0,455. Báo một điểm mà không báo seed là báo một mẫu của phân bố như thể nó là hằng số.
+1. **Con số 3,386 tôi báo cáo ở bản trước là seed 0 trên phân vùng P-A — không phải "F2 của LargeST".** F2 là một *phân bố* (qua 200 seed: 2,317–4,845, trung vị 3,432, sd 0,455) **và** phụ thuộc cách quản lý RNG (2,85 hoặc 3,81). Báo một điểm mà không báo seed **và** không báo cách quản lý generator là báo một mẫu như thể nó là hằng số.
 2. **Điểm số lật theo seed.** Ngưỡng 3 điểm là F2 ≥ 3. Qua 200 seed, **167 lần đạt và 33 lần trượt (16,5 %)**. Cùng một bộ dữ liệu, cùng một công thức, cùng một ngưỡng — gần **1/6 khả năng nhận 0 điểm** thay vì 3. Một tiêu chí mà điểm của nó phụ thuộc một biến không được khai báo thì chưa phải tiêu chí, mà là một phép thử may rủi.
 
-**Đây cũng là lời giải cho 3,81.** Giá trị 3,81 trong đề cương nằm **trong** khoảng 200 seed (40/200 seed đạt ≥ 3,81; max 4,845) — nên nó **không sai**, nó là **một seed khác**. Cụ thể 3,81 ứng với mẫu số ≈ **21,50** thay vì 24,20 của seed 0, tức khoảng **phân vị thứ 96** của phân bố mẫu số. Nói cách khác: con số trong đề cương là một lần rút nằm ở đuôi trên, không phải giá trị trung tâm. Tôi đã thử tìm xem có cửa sổ giờ nào tái lập được 3,81 không (`65_f2_window_test.py`) — và **không cửa sổ nào**: lọc 06–22 làm F2 **giảm** xuống 3,104, không tăng. Vậy khác biệt là seed của phép chia ngẫu nhiên, không phải cửa sổ thời gian — kết luận này giữ nguyên sau khi đo đủ 200 seed.
+### Lời giải đúng cho 3,81 — và nó là một lỗi nặng hơn tôi tưởng
 
-**Sửa thế nào:** hoặc (a) khai báo seed và báo kèm khoảng tin cậy trên nhiều seed, hoặc (b) bỏ mẫu số ngẫu nhiên và dùng một mốc tất định — ví dụ EMD giữa các cảm biến **trong cùng một tuyến** (dị biệt nội tại), cho ra tỉ số không phụ thuộc lần rút nào.
+Ở bản trước tôi viết 3,81 là "một seed khác". **Đó cũng là đoán, và sai.** Tôi đã lần lượt loại bốn giả thuyết bằng cách đo từng cái:
+
+| Giả thuyết | Kiểm bằng | Kết quả |
+|---|---|---|
+| Cửa sổ giờ 06–22 | `65_f2_window_test.py` | Lọc 06–22 làm F2 **giảm** còn 3,104. Không phải. |
+| `fillna(0)` | `64_f2_fillna_test.py` | `fillna` làm F2 **giảm** 3,384 → 3,173. Không phải. |
+| Cỡ mẫu 20.000/nhóm | `77_f2_attribution.py` | Đổi tử số rất ít, tỉ số 2,803–2,889. Không phải. |
+| Nhóm IID đều nhau vs lệch cỡ | `78_f2_equal_vs_matched.py` | Tử số khớp đúng **86,37**, mẫu số vẫn 30,27. Không đủ. |
+| **Trạng thái RNG tích luỹ** | `79_f2_rng_order.py` | **Khớp chính xác: 86,37 / 22,64 / 3,81** |
+
+Nguyên nhân thật: `56_compute_emd.py` tạo **một** `rng = default_rng(0)` rồi dùng nó cho **cả** bước lấy mẫu theo hành lang (26 lần `rng.choice`) **và** bước `rng.shuffle` dựng nhóm IID. Nên phép shuffle **không phải** `default_rng(0).shuffle()` — nó là shuffle của một generator đã bị tiêu hao 26 lần.
+
+Đo cả hai cách xử lý, cùng công thức, cùng dữ liệu:
+
+| Cách xử lý RNG | Tử số | Mẫu số | **F2** |
+|---|---|---|---|
+| **Chung một `rng`** (như `56` đang làm) | 86,37 | **22,64** | **3,81** |
+| `rng` mới cho nhóm đối chứng | 86,37 | 30,27 | **2,85** |
+| Đề cương công bố | 86,40 | 22,60 | 3,81 |
+
+**Cùng một công thức, cùng dữ liệu, hai cách quản lý RNG → 3,81 hoặc 2,85.** Chênh **0,96**.
+
+Đây là lỗi **nặng hơn** lỗi seed tôi báo trước đó, vì hai lý do:
+
+1. **Nó không lộ ra khi chạy lại script.** `56_compute_emd.py` tái lập đúng 3,81 mỗi lần — nên bất kỳ ai kiểm tra cũng thấy "đúng". Chỉ khi viết lại độc lập từ công thức mới lộ ra tỉ số thật là 2,85.
+2. **Mẫu số 22,6 phụ thuộc thứ tự tiêu hao RNG, không phụ thuộc dữ liệu.** Đó không phải một tính chất của bộ dữ liệu; đó là một tính chất của thứ tự gọi hàm.
+
+**Hệ quả cho ngưỡng ≥ 3:** với cách quản lý RNG sạch (mỗi phép ngẫu nhiên một generator riêng, tức cách viết đúng), F2 của bộ dữ liệu này là **2,85 — trượt ngưỡng 3**. Con số 3,81 chỉ đạt được nhờ trạng thái RNG tích luỹ.
+
+**Sửa thế nào:** bỏ mẫu số ngẫu nhiên. Dùng mốc **tất định**: EMD giữa các cảm biến **trong cùng một tuyến** (dị biệt nội tại), hoặc EMD giữa các tuyến so với EMD giữa **các nửa thời gian của cùng một tuyến**. Tỉ số khi đó không phụ thuộc lần rút nào và không phụ thuộc thứ tự gọi hàm.
 
 ### F3: Gini 0,401, client lớn nhất 13,27 %
 
 | Chỉ số | Giá trị | Ngưỡng |
 |---|---|---|
-| Gini | **0,401** | 0,2–0,5 ✓ |
-| Client lớn nhất | **13,27 %** | ≤ 50 % ✓ |
+| Gini | **0,401** | trong 0,2–0,5 — đạt |
+| Client lớn nhất | **13,27 %** | ≤ 50 % — đạt |
 | Hai lớn nhất | 25,28 % | — |
 | max/min | 9,5× | — |
 
@@ -231,17 +265,17 @@ Hai hệ quả:
 |---|---|---|---|---|
 | T2 | 2,161 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
 | T3 | 2,79 % | ≤ 1 % | **0** | ngưỡng quá chặt cho PeMS |
-| F2 | 3,386× (seed 0), trung vị 3,432 | ≥ 3 | **3** | không khai báo seed → 16,5 % seed cho 0 |
+| F2 | **2,85×** (RNG sạch) · 3,81 chỉ khi RNG dùng chung | ≥ 3 | **0** | mẫu số phụ thuộc một lần rút **và** thứ tự gọi hàm |
 | F3 | 0,401 / 13,27 % | 0,2–0,5, ≤ 50 % | **3** | — |
 | B1 | *chưa đo* | ≥ 2 | **?** | cần huấn luyện |
 | B3 | 59,09 % | 10–40 % | **0** | dữ liệu thật quá bẩn |
 | K2 | R² 0,8667 | ≤ 0,70 | **0** | **đại lượng đo sai** |
 | K3 | 0,19–0,53 | ≥ 2 | **0** | **công thức không thể đạt** |
-| | | | **6/21** | (chưa tính B1) |
+| | | | **3/21** | (chưa tính B1) |
 
-**Nếu chấm đủ 8 hạng mục, LargeST SD được khoảng 6/21 điểm (29 %)** — một bộ dữ liệu bị rubric của chính nó xếp vào loại kém, dù đây là benchmark giao thông được trích dẫn nhiều nhất và đã tái lập đúng Bảng 2 của bài gốc (HL MAE 60,80 vs 60,79).
+**Nếu chấm đủ 8 hạng mục, LargeST SD được khoảng 3/21 điểm (14 %)** — một bộ dữ liệu bị rubric của chính nó xếp vào loại kém, dù đây là benchmark giao thông được trích dẫn nhiều nhất và đã tái lập đúng Bảng 2 của bài gốc (HL MAE 60,80 vs 60,79).
 
-Đó là **dấu hiệu rubric đang đo sai thứ**, không phải dấu hiệu dữ liệu kém. Một rubric mà bộ dữ liệu chuẩn của lĩnh vực chỉ đạt 29 % thì rubric đó cần hiệu chỉnh lại ngưỡng và công thức trước khi dùng để loại bất cứ thứ gì.
+Đó là **dấu hiệu rubric đang đo sai thứ**, không phải dấu hiệu dữ liệu kém. Một rubric mà bộ dữ liệu chuẩn của lĩnh vực chỉ đạt 14 % thì rubric đó cần hiệu chỉnh lại ngưỡng và công thức trước khi dùng để loại bất cứ thứ gì.
 
 ---
 

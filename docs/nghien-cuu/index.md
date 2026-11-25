@@ -6,6 +6,7 @@ Mọi con số trong các tài liệu dưới đây đọc từ tệp kết qu�
 
 ## Danh sách tài liệu
 
+- **[Giao thức chốt trước khi chạy — PROTOCOL (25/11/2026)](protocol.md)** — Khoá 12 luật trước khi có vòng FL đầu tiên: đơn vị 'một vòng', `R_conv`, mẫu số FedAvg, 10 seed + Holm + TOST, điều kiện hợp lệ, cổng dừng, luật cắt, phân vùng P-A và nguồn sự thật là CSV. Kèm nhật ký pre-registration.
 - **[Khuyến nghị chọn mục tiêu đánh giá](khuyen-nghi-muc-tieu.md)** — Tổng hợp bốn nguồn bằng chứng: chọn cái giá của phòng thủ làm mục tiêu chính, tấn công cảm biến làm phụ, loại tấn công mô hình thuần.
 - **[Báo cáo tổng hợp — LargeST-ByzBench](bao-cao-tong-hop.md)** — Tổng hợp bốn nhánh công việc: kiểm chứng 93 công trình, đề cương v3, đối chiếu bản GAP-1, và đánh giá MLflow.
 - **[Đề cương nghiên cứu v3 — LargeST-ByzBench](de-xuat-v3.md)** — Bản đề cương sửa theo 18 hạng mục góp ý của giảng viên hướng dẫn. Ma trận 22.240 lần chạy, thiết kế thống kê chốt trước.

@@ -13,4 +13,5 @@ nav:
   - "Chấm bộ tiêu chí 24/11 lên LargeST": cham-tieu-chi-24-11.md
   - "Hạ tầng triển khai — đo trên máy thật": ha-tang-trien-khai.md
   - "MLflow — đo ở đúng quy mô": mlflow-quyet-dinh.md
+  - "Giao thức chốt trước khi chạy (PROTOCOL · 25/11)": protocol.md
   - ...

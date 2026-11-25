@@ -8,8 +8,7 @@ Cách dùng:
 
 Script sẽ:
   1. Copy file vào docs/<tab>/ với tên không dấu, gạch ngang.
-  2. Ghi một dòng vào mục "Mới cập nhật" ở trang Tiến độ chung (trừ tab nhap-nhom).
-  3. Nếu có --push: git add, commit và push. Khoảng 1 phút sau trang cập nhật.
+  2. Nếu có --push: git add, commit và push. Khoảng 1 phút sau trang cập nhật.
 """
 import argparse
 import datetime
@@ -61,15 +60,8 @@ def main() -> None:
     shutil.copy2(nguon, dich)
     print(f"Đã copy -> {dich.relative_to(GOC)}")
 
-    if a.tab != "nhap-nhom" and dich.suffix == ".md":
-        tieu_de = a.tieu_de or tieu_de_tu_file(dich)
-        ngay = datetime.date.today().strftime("%d/%m/%Y")
-        dong = f"- **{ngay}**: [{tieu_de}]({a.tab}/{ten_moi})"
-        index = DOCS / "tien-do.md"
-        nd = index.read_text(encoding="utf-8")
-        if MOC in nd and dong not in nd:
-            index.write_text(nd.replace(MOC, f"{MOC}\n{dong}", 1), encoding="utf-8")
-            print("Đã thêm vào mục Mới cập nhật ở trang Tiến độ chung.")
+    # "Mới cập nhật" và trang Thành viên tự lấy ngày từ git (hooks/thanh_vien.py),
+    # nên không cần ghi tay nữa.
 
     if a.push:
         subprocess.run(["git", "add", "-A"], cwd=GOC, check=True)

@@ -15,3 +15,15 @@
 .di-toi a { color: var(--md-typeset-a-color); }
 /* Màn hình hẹp: thanh bên phải bị ẩn, nên không cần hộp này */
 @media screen and (max-width: 76.1875em) { .di-toi { display: none; } }
+/* Nhãn bài mới trên trang Thành viên và Tiến độ chung */
+.nhan-moi, .nhan-moi-sua {
+  display: inline-block;
+  padding: 0 0.35em;
+  border-radius: 0.2rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  vertical-align: middle;
+}
+.nhan-moi { background: #2e7d32; }
+.nhan-moi-sua { background: #ef6c00; }
